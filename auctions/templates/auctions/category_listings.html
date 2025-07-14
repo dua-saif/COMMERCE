@@ -1,0 +1,30 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}Listings in {{ category_name }}{% endblock %}
+
+{% block body %}
+  <h2>Listings in category: {{ category_name }}</h2>
+
+  {% for listing in listings %}
+    <div class="d-flex align-items-start mb-4 p-3 border rounded">
+      {% if listing.image_url %}
+        <img src="{{ listing.image_url }}" alt="{{ listing.title }}"
+             style="width: 260px; height: 330px; object-fit: cover; border-radius: 6px; margin-right: 20px;">
+      {% else %}
+        <div style="width: 260px; height: 330px; background: #eee; border-radius: 6px; margin-right: 20px;"></div>
+      {% endif %}
+
+      <div style="flex-grow: 1;">
+        <h4>
+          <a href="{% url 'listing' listing.id %}" class="listing-link">
+            {{ listing.title }}
+          </a>
+        </h4>
+        <p class="text-muted">{{ listing.description|truncatechars:300 }}</p>
+        <p><strong>Starting Bid:</strong> ${{ listing.starting_bid }}</p>
+      </div>
+    </div>
+  {% empty %}
+    <p>No active listings in this category.</p>
+  {% endfor %}
+{% endblock %}

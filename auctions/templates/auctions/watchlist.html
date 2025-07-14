@@ -1,0 +1,30 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}Your Watchlist{% endblock %}
+
+{% block body %}
+  <h2>Your Watchlist</h2>
+
+  {% if watchlist %}
+    {% for listing in watchlist %}
+      <div class="d-flex align-items-start mb-4 p-3 border rounded">
+        <a href="{% url 'listing' listing.id %}" style="display: flex; text-decoration: none; color: inherit; width: 100%;">
+          {% if listing.image_url %}
+            <img src="{{ listing.image_url }}" alt="{{ listing.title }}"
+                 style="width: 260px; height: 330px; object-fit: cover; border-radius: 6px; margin-right: 20px;">
+          {% else %}
+            <div style="width: 260px; height: 330px; background: #eee; border-radius: 6px; margin-right: 20px;"></div>
+          {% endif %}
+
+          <div style="flex-grow: 1;">
+            <h4>{{ listing.title }}</h4>
+            <p class="text-muted">{{ listing.description|truncatechars:300 }}</p>
+            <p><strong>Starting Bid:</strong> ${{ listing.starting_bid }}</p>
+          </div>
+        </a>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>You haven’t added any items to your watchlist yet.</p>
+  {% endif %}
+{% endblock %}

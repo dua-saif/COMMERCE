@@ -1,0 +1,125 @@
+{% extends "auctions/layout.html" %}
+
+{% load custom_tags %}
+{% block title %}{{ listing.title }}{% endblock %}
+
+{% block body %}
+  <h2>
+    <a href="{% url 'listing' listing.id %}">
+      {{ listing.title }}
+    </a>
+  </h2>
+
+  {% if listing.image_url %}
+    <img src="{{ listing.image_url }}" alt="{{ listing.title }}" 
+         style="width:300px; height:400px; object-fit: cover; border-radius: 6px; margin-bottom: 15px;">
+  {% endif %}
+
+  <p>{{ listing.description }}</p>
+  <p><strong>Current Price:</strong> ${{ current_price }}</p>
+
+  {% if user.is_authenticated %}
+    <form method="post" style="margin-bottom: 20px;">
+      {% csrf_token %}
+      <button type="submit" name="watchlist" class="btn btn-outline-primary">
+        {% if listing in user.watchlist.all %}
+          Remove from Watchlist
+        {% else %}
+          Add to Watchlist
+        {% endif %}
+      </button>
+    </form>
+  {% endif %}
+
+  {% if user == listing.owner and listing.is_active %}
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" name="close_auction" class="btn btn-danger mt-2">Close Auction</button>
+    </form>
+  {% endif %}
+
+  {% if user == listing.owner and not listing.is_active %}
+    <form method="post" style="margin-top: 10px;">
+      {% csrf_token %}
+      <button type="submit" name="reopen_auction" class="btn btn-success">Reopen Auction</button>
+    </form>
+  {% endif %}
+
+  {% if not listing.is_active %}
+    {% if bids and user == bids.0.bidder %}
+      <div class="alert alert-success mt-3">
+        🎉 You won this auction!
+      </div>
+    {% elif user == listing.owner %}
+      <div class="alert alert-info mt-3">
+        Auction closed. Winner: {{ bids.0.bidder.username }}
+      </div>
+    {% else %}
+      <div class="alert alert-secondary mt-3">
+        This auction has ended.
+      </div>
+    {% endif %}
+  {% endif %}
+
+  <hr>
+
+  <h4>Bids</h4>
+  <ul>
+    {% for bid in bids %}
+      <li>${{ bid.amount }} by {{ bid.bidder.username }}</li>
+    {% empty %}
+      <li>No bids yet.</li>
+    {% endfor %}
+  </ul>
+
+  {% if user.is_authenticated and listing.is_active %}
+    <hr>
+    <h4>Place a Bid</h4>
+    <form method="post">
+      {% csrf_token %}
+      <input type="number" step="0.01" min="{{ current_price|floatformat:2 }}" name="bid" placeholder="Enter your bid" required>
+      <button type="submit" class="btn btn-primary">Submit Bid</button>
+    </form>
+  {% elif not listing.is_active %}
+    <p><em>This auction is closed.</em></p>
+  {% else %}
+    <p><a href="{% url 'login' %}">Log in</a> to place a bid.</p>
+  {% endif %}
+
+  <hr>
+
+  <h4>Comments</h4>
+  <ul>
+    {% for comment in comments %}
+      <li>
+        <strong>{{ comment.commenter.username }}:</strong> {{ comment.content }} 
+        <em>({{ comment.timestamp|date:"M d, Y H:i" }})</em>
+      </li>
+    {% empty %}
+      <li>No comments yet.</li>
+    {% endfor %}
+  </ul>
+
+  <hr>
+
+  <h4>Add a Comment</h4>
+
+  {% if user.is_authenticated and listing.is_active %}
+    <form method="post" action="{% url 'add_comment' listing.id %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <textarea name="comment_content" rows="3" class="form-control" placeholder="Write your comment here..." required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary mt-2">Submit Comment</button>
+    </form>
+  {% elif not listing.is_active %}
+    <p><em>This auction is closed. Comments are disabled.</em></p>
+  {% else %}
+    <p><a href="{% url 'login' %}">Log in</a> to add comments.</p>
+  {% endif %}
+
+{% endblock %}
+ 
+  </strong>
+  ${{ current_price }}
+</p>

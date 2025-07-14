@@ -1,0 +1,35 @@
+{% extends "auctions/layout.html" %}
+{% load custom_tags %}  {# For the get_item filter #}
+
+{% block title %}Won Auctions{% endblock %}
+
+{% block body %}
+  <h2>Your Won Auctions</h2>
+
+  {% if user.is_authenticated %}
+    {% if listings %}
+      {% for listing in listings %}
+        <div class="d-flex align-items-start mb-4 p-3 border rounded">
+          {% if listing.image_url %}
+            <img src="{{ listing.image_url }}" alt="{{ listing.title }}"
+                 style="width: 260px; height: 330px; object-fit: cover; border-radius: 6px; margin-right: 20px;">
+          {% else %}
+            <div style="width: 260px; height: 330px; background: #eee; border-radius: 6px; margin-right: 20px;"></div>
+          {% endif %}
+
+          <div style="flex-grow: 1;">
+            <h4><a href="{% url 'listing' listing.id %}">{{ listing.title }}</a></h4>
+            <p class="text-muted">{{ listing.description|truncatechars:200 }}</p>
+            <p><strong>Final Price:</strong> ${{ final_prices|get_item:listing.id }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>You haven't won any auctions yet.</p>
+    {% endif %}
+  {% else %}
+    <div class="alert alert-warning">
+      Please <a href="{% url 'login' %}">log in</a> to view your won auctions.
+    </div>
+  {% endif %}
+{% endblock %}

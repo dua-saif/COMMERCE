@@ -1,0 +1,110 @@
+body {
+    background-color: lavender;
+    color: #212529; /* Dark text for contrast */
+}
+
+/* Container for each listing */
+.listing-container {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1.75rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: hsl(273, 79%, 48%);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+  cursor: default;
+  pointer-events: none; /* disable clicks on whole container */
+}
+
+.listing-container:hover {
+  box-shadow: 0 8px 20px rgba(0, 123, 255, 0.15);
+}
+
+/* Image styling */
+.listing-image {
+  width: 260px;
+  height: 330px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 24px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.listing-image:hover {
+  transform: scale(1.03);
+}
+
+/* Placeholder div when no image */
+.listing-image-placeholder {
+  width: 260px;
+  height: 330px;
+  background: #f0f0f0;
+  border-radius: 8px;
+  margin-right: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #b0b0b0;
+  font-style: italic;
+  font-size: 1rem;
+  user-select: none;
+}
+
+/* Info section grows to fill */
+.listing-info {
+  flex-grow: 1;
+}
+
+/* Only links are clickable inside container */
+.listing-container a {
+  pointer-events: auto;
+  text-decoration: none;
+  color: #007bff;
+  font-weight: 600;
+  font-size: 1.3rem;
+  transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+.listing-container a:hover {
+  text-decoration: underline;
+  color: #0056b3;
+}
+
+/* Truncated description text */
+.listing-description {
+  color: #6c757d;
+  margin: 0.5rem 0 1rem 0;
+  line-height: 1.5;
+  font-size: 1rem;
+  max-height: 4.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+/* Bid text */
+.listing-bid {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #212529;
+  letter-spacing: 0.02em;
+}
+
+/* Link styles */
+.listing-link {
+  color: #007bff;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.listing-link:hover {
+  color: #0056b3;
+  text-decoration: none;
+}

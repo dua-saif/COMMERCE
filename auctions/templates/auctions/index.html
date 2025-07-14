@@ -1,0 +1,35 @@
+{% extends "auctions/layout.html" %}
+{% load custom_tags %}
+
+{% block title %}
+Active Listings
+{% endblock %}
+
+{% block body %}
+  {% for listing in listings %}
+    <div class="d-flex align-items-start mb-4 p-3 border rounded">
+      {% if listing.image_url %}
+        <img src="{{ listing.image_url }}" alt="{{ listing.title }}"
+             style="width: 260px; height: 330px; object-fit: cover; border-radius: 6px; margin-right: 20px;">
+      {% else %}
+        <div style="width: 260px; height: 330px; background: #eee; border-radius: 6px; margin-right: 20px;"></div>
+      {% endif %}
+
+      <div style="flex-grow: 1;">
+        <!-- Only the title is clickable with default blue style -->
+        <h4>
+          <a href="{% url 'listing' listing.id %}">
+            {{ listing.title }}
+          </a>
+        </h4>
+
+        <p class="text-muted">{{ listing.description|truncatechars:300 }}</p>
+        <p><strong>Starting Bid:</strong> ${{ listing.starting_bid }}</p>
+        <p><strong>current Bid:</strong> ${{ current_prices|get_item:listing.id }}</p>
+      
+      </div>
+    </div>
+  {% empty %}
+    <p>No active listings yet.</p>
+  {% endfor %}
+{% endblock %} 
