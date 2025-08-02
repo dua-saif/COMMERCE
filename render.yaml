@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: commerce
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn commerce.wsgi:application
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: commerce.settings
+      - key: PYTHON_VERSION
+        value: "3.10"
+      - key: DATABASE_URL
+        value: postgresql://commerce_db_iws8_user:UXvOrBosUj6bYtnosruy7fBWUmcP8o3J@dpg-d277ane3jp1c73eidrf0-a.frankfurt-postgres.render.com/commerce_db_iws8
